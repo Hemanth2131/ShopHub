@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Product details and information">
+  <title>Product Details - ShopHub</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js"></script>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo" onclick="window.location.href='index.html'">🛍️ ShopHub</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#products">Products</a></li>
+        <li>
+          <div class="cart-icon" onclick="window.location.href='cart.html'">
+            🛒
+            <span class="cart-count" id="cartCount">0</span>
+          </div>
+        </li>
+        <li id="authButton">
+          <a href="login.html" class="btn btn-primary" style="padding: 0.5rem 1.5rem;">Login</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <div class="container" style="margin-top: 2rem;">
+    <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); font-size: 0.9rem;">
+      <a href="index.html" style="color: var(--text-muted);">Home</a>
+      <span>›</span>
+      <a href="index.html#products" style="color: var(--text-muted);">Products</a>
+      <span>›</span>
+      <span id="breadcrumbProduct" style="color: var(--text-primary);">Product</span>
+    </div>
+  </div>
+
+  <!-- Product Detail Section -->
+  <section class="section">
+    <div class="container">
+      <!-- Loading State -->
+      <div id="loadingState" class="card" style="padding: 3rem; text-align: center;">
+        <div class="loading" style="width: 50px; height: 50px; border-width: 5px; margin: 0 auto;"></div>
+        <p style="margin-top: 1rem;">Loading product details...</p>
+      </div>
+
+      <!-- Product Content -->
+      <div id="productContent" style="display: none;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;">
+          <!-- Product Image -->
+          <div class="card" style="padding: 0; overflow: hidden;">
+            <div id="productImageContainer"
+              style="height: 500px; display: flex; align-items: center; justify-content: center; background: var(--dark-gradient); font-size: 10rem; cursor: zoom-in;">
+              <!-- Image will be inserted here -->
+            </div>
+          </div>
+
+          <!-- Product Info -->
+          <div>
+            <h1 id="productName" style="margin-bottom: 1rem;"></h1>
+            <p id="productDescription" style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 2rem;">
+            </p>
+
+            <div
+              style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 2rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                <span style="color: var(--text-secondary);">Price</span>
+                <div id="productPrice"
+                  style="font-size: 2.5rem; font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                </div>
+              </div>
+
+              <div style="border-top: 1px solid var(--glass-border); padding-top: 1rem;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                  <label style="color: var(--text-secondary); font-weight: 500;">Quantity:</label>
+                  <div
+                    style="display: flex; align-items: center; gap: 0.5rem; background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); padding: 0.5rem;">
+                    <button id="decreaseQty" class="btn btn-secondary"
+                      style="padding: 0.5rem 1rem; min-width: auto;">-</button>
+                    <input type="number" id="quantity" value="1" min="1" max="99"
+                      style="width: 60px; text-align: center; background: transparent; border: none; color: var(--text-primary); font-size: 1.1rem; font-weight: 600;">
+                    <button id="increaseQty" class="btn btn-secondary"
+                      style="padding: 0.5rem 1rem; min-width: auto;">+</button>
+                  </div>
+                </div>
+
+                <button id="addToCartBtn" class="btn btn-primary"
+                  style="width: 100%; font-size: 1.1rem; padding: 1rem;">
+                  <span id="btnText">Add to Cart 🛒</span>
+                  <span id="btnLoading" class="loading" style="display: none;"></span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Product Features -->
+            <div class="card" style="margin-bottom: 1.5rem;">
+              <h3 style="margin-bottom: 1rem;">Product Features</h3>
+              <ul style="list-style: none; padding: 0;">
+                <li
+                  style="padding: 0.75rem 0; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="color: var(--primary-color);">✓</span>
+                  <span>Premium Quality Materials</span>
+                </li>
+                <li
+                  style="padding: 0.75rem 0; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="color: var(--primary-color);">✓</span>
+                  <span>Fast & Free Shipping</span>
+                </li>
+                <li
+                  style="padding: 0.75rem 0; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="color: var(--primary-color);">✓</span>
+                  <span>30-Day Money Back Guarantee</span>
+                </li>
+                <li style="padding: 0.75rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="color: var(--primary-color);">✓</span>
+                  <span>1 Year Warranty</span>
+                </li>
+              </ul>
+            </div>
+
+            <button class="btn btn-outline" onclick="window.location.href='index.html#products'" style="width: 100%;">
+              ← Back to Products
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>ShopHub</h3>
+          <p>Your premium destination for quality products and exceptional service.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#products">Products</a></li>
+            <li><a href="cart.html">Cart</a></li>
+            <li><a href="login.html">Account</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Customer Service</h3>
+          <ul>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Shipping Info</a></li>
+            <li><a href="#">Returns</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Connect</h3>
+          <ul>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 ShopHub. All rights reserved. Built with ❤️</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Product icons mapping
+    const productIcons = {
+      'T-Shirt': '👕',
+      'Shoes': '👟',
+      'Watch': '⌚',
+      'Laptop': '💻',
+      'Phone': '📱',
+      'Headphones': '🎧',
+      'Camera': '📷',
+      'Bag': '👜'
+    };
+
+    let currentProduct = null;
+
+    // Get product ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = parseInt(urlParams.get('id'));
+
+    // Quantity controls
+    document.getElementById('decreaseQty').addEventListener('click', () => {
+      const qtyInput = document.getElementById('quantity');
+      if (qtyInput.value > 1) {
+        qtyInput.value = parseInt(qtyInput.value) - 1;
+      }
+    });
+
+    document.getElementById('increaseQty').addEventListener('click', () => {
+      const qtyInput = document.getElementById('quantity');
+      if (qtyInput.value < 99) {
+        qtyInput.value = parseInt(qtyInput.value) + 1;
+      }
+    });
+
+    // Load product details
+    async function loadProduct() {
+      try {
+        const response = await fetch(`http://localhost:5000/api/products/${productId}`);
+        const product = await response.json();
+
+        currentProduct = product;
+
+        // Update breadcrumb
+        document.getElementById('breadcrumbProduct').textContent = product.name;
+
+        // Update product details
+        document.getElementById('productName').textContent = product.name;
+        document.getElementById('productDescription').textContent = product.description;
+        document.getElementById('productPrice').textContent = `₹${product.price}`;
+
+        // Set product image
+        const icon = productIcons[product.name] || '🛍️';
+        document.getElementById('productImageContainer').innerHTML = icon;
+
+        // Show product content
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('productContent').style.display = 'block';
+
+      } catch (error) {
+        console.error('Error loading product:', error);
+        document.getElementById('loadingState').innerHTML = `
+          <div class="card" style="text-align: center; padding: 3rem;">
+            <h3>Product not found</h3>
+            <p style="color: var(--text-muted); margin: 1rem 0;">The product you're looking for doesn't exist.</p>
+            <button class="btn btn-primary" onclick="window.location.href='index.html#products'">
+              Back to Products
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    // Add to cart
+    document.getElementById('addToCartBtn').addEventListener('click', () => {
+      if (!currentProduct) return;
+
+      const quantity = parseInt(document.getElementById('quantity').value);
+      const btnText = document.getElementById('btnText');
+      const btnLoading = document.getElementById('btnLoading');
+      const addToCartBtn = document.getElementById('addToCartBtn');
+
+      // Show loading
+      btnText.style.display = 'none';
+      btnLoading.style.display = 'inline-block';
+      addToCartBtn.disabled = true;
+
+      setTimeout(() => {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const existingItem = cart.find(item => item.id === currentProduct.id);
+
+        if (existingItem) {
+          existingItem.qty = (existingItem.qty || 1) + quantity;
+          showToast(`Updated ${currentProduct.name} quantity in cart`, 'success');
+        } else {
+          cart.push({
+            id: currentProduct.id,
+            name: currentProduct.name,
+            price: currentProduct.price,
+            qty: quantity
+          });
+          showToast(`${currentProduct.name} added to cart!`, 'success');
+        }
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+
+        // Reset button
+        btnText.style.display = 'inline';
+        btnLoading.style.display = 'none';
+        addToCartBtn.disabled = false;
+      }, 500);
+    });
+
+    // Initialize
+    loadProduct();
+  </script>
+
+  <style>
+    @media (max-width: 968px) {
+      #productContent>div {
+        grid-template-columns: 1fr !important;
+      }
+
+      #productImageContainer {
+        height: 300px !important;
+        font-size: 6rem !important;
+      }
+    }
+  </style>
+</body>
+
+</html>

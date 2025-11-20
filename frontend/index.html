@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Premium e-commerce store with the latest products">
+  <title>ShopHub - Premium Shopping Experience</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js"></script>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo" onclick="window.location.href='index.html'">🛍️ ShopHub</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#products">Products</a></li>
+        <li>
+          <div class="cart-icon" onclick="window.location.href='cart.html'">
+            🛒
+            <span class="cart-count" id="cartCount">0</span>
+          </div>
+        </li>
+        <li id="authButton">
+          <a href="login.html" class="btn btn-primary" style="padding: 0.5rem 1.5rem;">Login</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1>Discover Premium Products</h1>
+        <p>Experience the finest collection of curated products with unbeatable quality and style</p>
+        <button class="btn btn-primary"
+          onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})">
+          Shop Now ✨
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Section -->
+  <section class="section" id="products">
+    <div class="container">
+      <h2 class="text-center">Featured Products</h2>
+      <p class="text-center" style="max-width: 600px; margin: 0 auto var(--spacing-lg);">
+        Browse our carefully selected collection of premium products
+      </p>
+
+      <!-- Loading State -->
+      <div id="loadingState" class="product-grid">
+        <div class="card skeleton" style="height: 400px;"></div>
+        <div class="card skeleton" style="height: 400px;"></div>
+        <div class="card skeleton" style="height: 400px;"></div>
+      </div>
+
+      <!-- Products Grid -->
+      <div id="products" class="product-grid" style="display: none;"></div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>ShopHub</h3>
+          <p>Your premium destination for quality products and exceptional service.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#products">Products</a></li>
+            <li><a href="cart.html">Cart</a></li>
+            <li><a href="login.html">Account</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Customer Service</h3>
+          <ul>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Shipping Info</a></li>
+            <li><a href="#">Returns</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Connect</h3>
+          <ul>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 ShopHub. All rights reserved. Built with ❤️</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Product icons mapping
+    const productIcons = {
+      'T-Shirt': '👕',
+      'Shoes': '👟',
+      'Watch': '⌚',
+      'Laptop': '💻',
+      'Phone': '📱',
+      'Headphones': '🎧',
+      'Camera': '📷',
+      'Bag': '👜'
+    };
+
+    // Fetch and display products
+    async function loadProducts() {
+      try {
+        const response = await fetch('http://localhost:5000/api/products');
+        const products = await response.json();
+
+        const container = document.getElementById('products');
+        const loadingState = document.getElementById('loadingState');
+
+        // Hide loading, show products
+        setTimeout(() => {
+          loadingState.style.display = 'none';
+          container.style.display = 'grid';
+
+          products.forEach(product => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.onclick = () => window.location.href = `product.html?id=${product.id}`;
+
+            // Get icon for product
+            const icon = productIcons[product.name] || '🛍️';
+
+            card.innerHTML = `
+              <div class="product-image">
+                <span style="font-size: 5rem;">${icon}</span>
+              </div>
+              <div class="product-info">
+                <h3 class="product-name">${product.name}</h3>
+                <p class="product-description">${product.description}</p>
+                <div class="product-price">₹${product.price}</div>
+                <button class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;" onclick="event.stopPropagation(); addToCart(${product.id}, '${product.name}', ${product.price})">
+                  Add to Cart 🛒
+                </button>
+              </div>
+            `;
+
+            container.appendChild(card);
+          });
+        }, 800); // Simulate loading time
+
+      } catch (error) {
+        console.error('Error loading products:', error);
+        showToast('Failed to load products. Please try again.', 'error');
+        document.getElementById('loadingState').innerHTML = `
+          <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+            <h3>Unable to load products</h3>
+            <p>Please make sure the backend server is running on port 5000</p>
+            <button class="btn btn-primary" onclick="location.reload()">Retry</button>
+          </div>
+        `;
+      }
+    }
+
+    // Add to cart function
+    function addToCart(id, name, price) {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      // Check if item already exists
+      const existingItem = cart.find(item => item.id === id);
+
+      if (existingItem) {
+        existingItem.qty = (existingItem.qty || 1) + 1;
+        showToast(`Updated ${name} quantity in cart`, 'success');
+      } else {
+        cart.push({ id, name, price, qty: 1 });
+        showToast(`${name} added to cart!`, 'success');
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+    }
+
+    // Initialize
+    loadProducts();
+  </script>
+</body>
+
+</html>

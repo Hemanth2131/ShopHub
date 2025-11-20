@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Admin dashboard for product management">
+    <title>Admin Dashboard - ShopHub</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js"></script>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo" onclick="window.location.href='index.html'">🛍️ ShopHub</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#products">Products</a></li>
+                <li>
+                    <div class="cart-icon" onclick="window.location.href='cart.html'">
+                        🛒
+                        <span class="cart-count" id="cartCount">0</span>
+                    </div>
+                </li>
+                <li id="authButton">
+                    <a href="login.html" class="btn btn-primary" style="padding: 0.5rem 1.5rem;">Login</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Admin Dashboard -->
+    <section class="section">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h1>👑 Admin Dashboard</h1>
+                <p style="color: var(--text-secondary);">Manage products and view statistics</p>
+            </div>
+
+            <!-- Access Denied Message -->
+            <div id="accessDenied" style="display: none;">
+                <div class="card" style="text-align: center; padding: 4rem 2rem;">
+                    <div style="font-size: 5rem; margin-bottom: 1rem;">🔒</div>
+                    <h2 style="margin-bottom: 1rem;">Access Denied</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 2rem;">
+                        You need admin privileges to access this page.
+                    </p>
+                    <button class="btn btn-primary" onclick="window.location.href='login.html'">
+                        Login as Admin
+                    </button>
+                </div>
+            </div>
+
+            <!-- Admin Content -->
+            <div id="adminContent" style="display: none;">
+                <!-- Stats Cards -->
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📦</div>
+                        <h3 id="totalProducts">0</h3>
+                        <p style="color: var(--text-muted);">Total Products</p>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👥</div>
+                        <h3 id="totalUsers">0</h3>
+                        <p style="color: var(--text-muted);">Total Users</p>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🛒</div>
+                        <h3 id="totalOrders">0</h3>
+                        <p style="color: var(--text-muted);">Total Orders</p>
+                    </div>
+                </div>
+
+                <!-- Add Product Form -->
+                <div class="card" style="margin-bottom: 2rem;">
+                    <h2 style="margin-bottom: 1.5rem;">➕ Add New Product</h2>
+                    <form id="addProductForm" onsubmit="addProduct(event)">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="productName">Product Name</label>
+                                <input type="text" id="productName" class="form-input" placeholder="e.g., Laptop"
+                                    required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="productPrice">Price (₹)</label>
+                                <input type="number" id="productPrice" class="form-input" placeholder="e.g., 45000"
+                                    min="1" step="0.01" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="productDescription">Description</label>
+                            <textarea id="productDescription" class="form-input" placeholder="Product description..."
+                                rows="3" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="addProductBtn">
+                            <span id="addBtnText">Add Product ✨</span>
+                            <span id="addBtnLoading" class="loading" style="display: none;"></span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Products List -->
+                <div class="card">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2>📦 Manage Products</h2>
+                        <button class="btn btn-secondary" onclick="loadProducts()">
+                            Refresh 🔄
+                        </button>
+                    </div>
+
+                    <div id="productsList">
+                        <!-- Products will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ShopHub</h3>
+                    <p>Your premium destination for quality products and exceptional service.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#products">Products</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        <li><a href="login.html">Account</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Customer Service</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <ul>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 ShopHub. All rights reserved. Built with ❤️</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const productIcons = {
+            'T-Shirt': '👕',
+            'Shoes': '👟',
+            'Watch': '⌚',
+            'Laptop': '💻',
+            'Phone': '📱',
+            'Headphones': '🎧',
+            'Camera': '📷',
+            'Bag': '👜'
+        };
+
+        let currentUser = null;
+
+        // Check admin access
+        function checkAdminAccess() {
+            currentUser = getCurrentUser();
+
+            if (!currentUser || currentUser.role !== 'admin') {
+                document.getElementById('accessDenied').style.display = 'block';
+                document.getElementById('adminContent').style.display = 'none';
+                return false;
+            }
+
+            document.getElementById('accessDenied').style.display = 'none';
+            document.getElementById('adminContent').style.display = 'block';
+            return true;
+        }
+
+        // Load products
+        async function loadProducts() {
+            try {
+                const response = await fetch('http://localhost:5000/api/products');
+                const products = await response.json();
+
+                document.getElementById('totalProducts').textContent = products.length;
+
+                const productsList = document.getElementById('productsList');
+                productsList.innerHTML = '';
+
+                if (products.length === 0) {
+                    productsList.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 2rem;">No products yet</p>';
+                    return;
+                }
+
+                products.forEach((product, index) => {
+                    const icon = productIcons[product.name] || '🛍️';
+                    const productCard = document.createElement('div');
+                    productCard.style.cssText = 'border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1rem; display: grid; grid-template-columns: 80px 1fr auto; gap: 1rem; align-items: center;';
+                    productCard.style.animation = `fadeInUp 0.4s ease ${index * 0.05}s backwards`;
+
+                    productCard.innerHTML = `
+            <div style="width: 80px; height: 80px; background: var(--dark-gradient); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">
+              ${icon}
+            </div>
+            <div>
+              <h3 style="margin-bottom: 0.25rem;">${product.name}</h3>
+              <p style="color: var(--text-muted); margin-bottom: 0.25rem; font-size: 0.9rem;">${product.description}</p>
+              <div style="font-size: 1.25rem; font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                ₹${product.price}
+              </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="btn btn-secondary" onclick="editProduct(${product.id})" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                Edit ✏️
+              </button>
+              <button class="btn btn-outline" onclick="deleteProduct(${product.id}, '${product.name}')" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                Delete 🗑️
+              </button>
+            </div>
+          `;
+
+                    productsList.appendChild(productCard);
+                });
+
+            } catch (error) {
+                console.error('Error loading products:', error);
+                showToast('Failed to load products', 'error');
+            }
+        }
+
+        // Add product
+        async function addProduct(e) {
+            e.preventDefault();
+
+            if (!currentUser) return;
+
+            const name = document.getElementById('productName').value;
+            const description = document.getElementById('productDescription').value;
+            const price = document.getElementById('productPrice').value;
+
+            const btnText = document.getElementById('addBtnText');
+            const btnLoading = document.getElementById('addBtnLoading');
+            const addProductBtn = document.getElementById('addProductBtn');
+
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-block';
+            addProductBtn.disabled = true;
+
+            try {
+                const response = await fetch('http://localhost:5000/api/products', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId: currentUser.id,
+                        name,
+                        description,
+                        price: parseFloat(price)
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showToast('Product added successfully! 🎉', 'success');
+                    document.getElementById('addProductForm').reset();
+                    loadProducts();
+                } else {
+                    showToast(data.message || 'Failed to add product', 'error');
+                }
+
+            } catch (error) {
+                console.error('Error adding product:', error);
+                showToast('Failed to add product', 'error');
+            } finally {
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+                addProductBtn.disabled = false;
+            }
+        }
+
+        // Edit product (simplified - just shows alert for now)
+        function editProduct(id) {
+            showToast('Edit feature coming soon! 🚀', 'info');
+            // In a real app, this would open a modal or navigate to edit page
+        }
+
+        // Delete product
+        async function deleteProduct(id, name) {
+            if (!confirm(`Are you sure you want to delete "${name}"?`)) {
+                return;
+            }
+
+            if (!currentUser) return;
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId: currentUser.id
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showToast('Product deleted successfully', 'success');
+                    loadProducts();
+                } else {
+                    showToast(data.message || 'Failed to delete product', 'error');
+                }
+
+            } catch (error) {
+                console.error('Error deleting product:', error);
+                showToast('Failed to delete product', 'error');
+            }
+        }
+
+        // Initialize
+        if (checkAdminAccess()) {
+            loadProducts();
+            // Mock stats for now
+            document.getElementById('totalUsers').textContent = '1';
+            document.getElementById('totalOrders').textContent = '0';
+        }
+    </script>
+
+    <style>
+        @media (max-width: 768px) {
+            #productsList>div {
+                grid-template-columns: 60px 1fr !important;
+            }
+
+            #productsList>div>div:last-child {
+                grid-column: 1 / -1;
+                margin-top: 1rem;
+                padding-top: 1rem;
+                border-top: 1px solid var(--glass-border);
+            }
+        }
+    </style>
+</body>
+
+</html>

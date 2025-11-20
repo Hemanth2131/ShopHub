@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Shopping cart - Review your items">
+  <title>Shopping Cart - ShopHub</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js"></script>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo" onclick="window.location.href='index.html'">🛍️ ShopHub</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#products">Products</a></li>
+        <li>
+          <div class="cart-icon" onclick="window.location.href='cart.html'">
+            🛒
+            <span class="cart-count" id="cartCount">0</span>
+          </div>
+        </li>
+        <li id="authButton">
+          <a href="login.html" class="btn btn-primary" style="padding: 0.5rem 1.5rem;">Login</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Cart Section -->
+  <section class="section">
+    <div class="container">
+      <h1 class="text-center" style="margin-bottom: 2rem;">Shopping Cart 🛒</h1>
+
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start;">
+        <!-- Cart Items -->
+        <div>
+          <div id="cartItems">
+            <!-- Cart items will be inserted here -->
+          </div>
+
+          <!-- Empty Cart State -->
+          <div id="emptyCart" style="display: none;">
+            <div class="card" style="text-align: center; padding: 4rem 2rem;">
+              <div style="font-size: 5rem; margin-bottom: 1rem;">🛒</div>
+              <h2 style="margin-bottom: 1rem;">Your cart is empty</h2>
+              <p style="color: var(--text-muted); margin-bottom: 2rem;">
+                Looks like you haven't added any items to your cart yet.
+              </p>
+              <button class="btn btn-primary" onclick="window.location.href='index.html#products'">
+                Start Shopping ✨
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cart Summary -->
+        <div id="cartSummary" style="display: none;">
+          <div class="card" style="position: sticky; top: 100px;">
+            <h3 style="margin-bottom: 1.5rem;">Order Summary</h3>
+
+            <div style="margin-bottom: 1.5rem;">
+              <div
+                style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; color: var(--text-secondary);">
+                <span>Subtotal</span>
+                <span id="subtotal">₹0</span>
+              </div>
+              <div
+                style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; color: var(--text-secondary);">
+                <span>Shipping</span>
+                <span style="color: var(--primary-color); font-weight: 600;">FREE</span>
+              </div>
+              <div
+                style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; color: var(--text-secondary);">
+                <span>Tax (18%)</span>
+                <span id="tax">₹0</span>
+              </div>
+
+              <div style="border-top: 2px solid var(--glass-border); margin: 1rem 0; padding-top: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 1.25rem; font-weight: 600;">Total</span>
+                  <div id="total"
+                    style="font-size: 2rem; font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    ₹0</div>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;" onclick="checkout()">
+              Proceed to Checkout 💳
+            </button>
+            <button class="btn btn-outline" style="width: 100%;" onclick="window.location.href='index.html#products'">
+              Continue Shopping
+            </button>
+
+            <div
+              style="margin-top: 1.5rem; padding: 1rem; background: var(--glass-bg); border-radius: var(--radius-sm); font-size: 0.85rem; color: var(--text-muted); text-align: center;">
+              <span style="color: var(--primary-color);">🔒</span> Secure Checkout
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>ShopHub</h3>
+          <p>Your premium destination for quality products and exceptional service.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#products">Products</a></li>
+            <li><a href="cart.html">Cart</a></li>
+            <li><a href="login.html">Account</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Customer Service</h3>
+          <ul>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Shipping Info</a></li>
+            <li><a href="#">Returns</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Connect</h3>
+          <ul>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 ShopHub. All rights reserved. Built with ❤️</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Product icons mapping
+    const productIcons = {
+      'T-Shirt': '👕',
+      'Shoes': '👟',
+      'Watch': '⌚',
+      'Laptop': '💻',
+      'Phone': '📱',
+      'Headphones': '🎧',
+      'Camera': '📷',
+      'Bag': '👜'
+    };
+
+    // Update quantity
+    function updateQuantity(id, newQty) {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const item = cart.find(item => item.id === id);
+
+      if (item) {
+        if (newQty <= 0) {
+          removeFromCart(id);
+          return;
+        }
+        item.qty = newQty;
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderCart();
+        showToast('Quantity updated', 'success');
+      }
+    }
+
+    // Remove from cart
+    function removeFromCart(id) {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const item = cart.find(item => item.id === id);
+      cart = cart.filter(item => item.id !== id);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      renderCart();
+      showToast(`${item.name} removed from cart`, 'info');
+    }
+
+    // Clear cart
+    function clearCart() {
+      if (confirm('Are you sure you want to clear your cart?')) {
+        localStorage.setItem('cart', JSON.stringify([]));
+        renderCart();
+        showToast('Cart cleared', 'info');
+      }
+    }
+
+    // Checkout
+    function checkout() {
+      showToast('Checkout feature coming soon! 🚀', 'info');
+    }
+
+    // Render cart
+    function renderCart() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const cartItemsContainer = document.getElementById('cartItems');
+      const emptyCart = document.getElementById('emptyCart');
+      const cartSummary = document.getElementById('cartSummary');
+
+      updateCartCount();
+
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '';
+        emptyCart.style.display = 'block';
+        cartSummary.style.display = 'none';
+        return;
+      }
+
+      emptyCart.style.display = 'none';
+      cartSummary.style.display = 'block';
+
+      // Render cart items
+      cartItemsContainer.innerHTML = '';
+      let subtotal = 0;
+
+      cart.forEach((item, index) => {
+        const itemTotal = item.price * (item.qty || 1);
+        subtotal += itemTotal;
+
+        const icon = productIcons[item.name] || '🛍️';
+
+        const cartItem = document.createElement('div');
+        cartItem.className = 'card';
+        cartItem.style.cssText = 'margin-bottom: 1rem; padding: 1.5rem;';
+        cartItem.style.animation = `fadeInUp 0.4s ease ${index * 0.05}s backwards`;
+
+        cartItem.innerHTML = `
+          <div style="display: grid; grid-template-columns: 80px 1fr auto; gap: 1.5rem; align-items: center;">
+            <div style="width: 80px; height: 80px; background: var(--dark-gradient); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">
+              ${icon}
+            </div>
+            
+            <div>
+              <h3 style="margin-bottom: 0.5rem;">${item.name}</h3>
+              <div style="font-size: 1.25rem; font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.5rem;">
+                ₹${item.price}
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <button class="btn btn-secondary" style="padding: 0.25rem 0.75rem; font-size: 0.85rem;" onclick="updateQuantity(${item.id}, ${(item.qty || 1) - 1})">-</button>
+                <span style="min-width: 40px; text-align: center; font-weight: 600;">${item.qty || 1}</span>
+                <button class="btn btn-secondary" style="padding: 0.25rem 0.75rem; font-size: 0.85rem;" onclick="updateQuantity(${item.id}, ${(item.qty || 1) + 1})">+</button>
+              </div>
+            </div>
+
+            <div style="text-align: right;">
+              <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">₹${itemTotal}</div>
+              <button class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;" onclick="removeFromCart(${item.id})">
+                Remove 🗑️
+              </button>
+            </div>
+          </div>
+        `;
+
+        cartItemsContainer.appendChild(cartItem);
+      });
+
+      // Add clear cart button
+      if (cart.length > 0) {
+        const clearButton = document.createElement('button');
+        clearButton.className = 'btn btn-outline';
+        clearButton.style.cssText = 'width: 100%; margin-top: 1rem;';
+        clearButton.textContent = 'Clear Cart';
+        clearButton.onclick = clearCart;
+        cartItemsContainer.appendChild(clearButton);
+      }
+
+      // Update summary
+      const tax = subtotal * 0.18;
+      const total = subtotal + tax;
+
+      document.getElementById('subtotal').textContent = `₹${subtotal.toFixed(2)}`;
+      document.getElementById('tax').textContent = `₹${tax.toFixed(2)}`;
+      document.getElementById('total').textContent = `₹${total.toFixed(2)}`;
+    }
+
+    // Initialize
+    renderCart();
+  </script>
+
+  <style>
+    @media (max-width: 968px) {
+      .container>div {
+        grid-template-columns: 1fr !important;
+      }
+
+      #cartSummary {
+        position: static !important;
+      }
+
+      #cartItems .card>div {
+        grid-template-columns: 60px 1fr !important;
+      }
+
+      #cartItems .card>div>div:last-child {
+        grid-column: 1 / -1;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--glass-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+  </style>
+</body>
+
+</html>

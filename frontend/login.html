@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login or register to access your account">
+    <title>Login - ShopHub</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js"></script>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo" onclick="window.location.href='index.html'">🛍️ ShopHub</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#products">Products</a></li>
+                <li>
+                    <div class="cart-icon" onclick="window.location.href='cart.html'">
+                        🛒
+                        <span class="cart-count" id="cartCount">0</span>
+                    </div>
+                </li>
+                <li id="authButton">
+                    <!-- Will be populated by app.js -->
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Auth Section -->
+    <section class="section">
+        <div class="container" style="max-width: 1000px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: stretch;">
+
+                <!-- Login Form -->
+                <div class="card" id="loginCard">
+                    <h2 style="margin-bottom: 0.5rem;">Welcome Back! 👋</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 2rem;">Login to your account</p>
+
+                    <form id="loginForm" onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="loginEmail">Email Address</label>
+                            <input type="email" id="loginEmail" class="form-input" placeholder="your@email.com"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="loginPassword">Password</label>
+                            <div style="position: relative;">
+                                <input type="password" id="loginPassword" class="form-input"
+                                    placeholder="Enter your password" required>
+                                <button type="button" onclick="togglePassword('loginPassword')"
+                                    style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2rem;">
+                                    👁️
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group"
+                            style="display: flex; justify-content: space-between; align-items: center;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" id="rememberMe" style="cursor: pointer;">
+                                <span style="color: var(--text-secondary); font-size: 0.9rem;">Remember me</span>
+                            </label>
+                            <a href="#" style="font-size: 0.9rem; color: var(--primary-color);">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;"
+                            id="loginBtn">
+                            <span id="loginBtnText">Login 🚀</span>
+                            <span id="loginBtnLoading" class="loading" style="display: none;"></span>
+                        </button>
+                    </form>
+
+                    <div
+                        style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--glass-border);">
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">
+                            Don't have an account?
+                            <a href="#" onclick="switchToRegister(event)"
+                                style="color: var(--primary-color); font-weight: 600;">Sign up</a>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Register Form -->
+                <div class="card" id="registerCard" style="display: none;">
+                    <h2 style="margin-bottom: 0.5rem;">Create Account ✨</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 2rem;">Join ShopHub today</p>
+
+                    <form id="registerForm" onsubmit="handleRegister(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="registerUsername">Username</label>
+                            <input type="text" id="registerUsername" class="form-input" placeholder="Choose a username"
+                                required minlength="3">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="registerEmail">Email Address</label>
+                            <input type="email" id="registerEmail" class="form-input" placeholder="your@email.com"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="registerPassword">Password</label>
+                            <div style="position: relative;">
+                                <input type="password" id="registerPassword" class="form-input"
+                                    placeholder="Create a strong password" required minlength="6">
+                                <button type="button" onclick="togglePassword('registerPassword')"
+                                    style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2rem;">
+                                    👁️
+                                </button>
+                            </div>
+                            <small style="color: var(--text-muted); font-size: 0.8rem;">Minimum 6 characters</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="registerConfirmPassword">Confirm Password</label>
+                            <input type="password" id="registerConfirmPassword" class="form-input"
+                                placeholder="Confirm your password" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label style="display: flex; align-items: start; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" required style="margin-top: 0.25rem; cursor: pointer;">
+                                <span style="color: var(--text-secondary); font-size: 0.85rem;">
+                                    I agree to the <a href="#" style="color: var(--primary-color);">Terms of Service</a>
+                                    and
+                                    <a href="#" style="color: var(--primary-color);">Privacy Policy</a>
+                                </span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;"
+                            id="registerBtn">
+                            <span id="registerBtnText">Create Account 🎉</span>
+                            <span id="registerBtnLoading" class="loading" style="display: none;"></span>
+                        </button>
+                    </form>
+
+                    <div
+                        style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--glass-border);">
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">
+                            Already have an account?
+                            <a href="#" onclick="switchToLogin(event)"
+                                style="color: var(--primary-color); font-weight: 600;">Login</a>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Info Panel -->
+                <div class="card" id="infoPanel"
+                    style="background: var(--primary-gradient); border: none; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 3rem 2rem;">
+                    <div style="font-size: 5rem; margin-bottom: 1.5rem;">🛍️</div>
+                    <h2 style="margin-bottom: 1rem; color: white;">Join ShopHub</h2>
+                    <p style="color: rgba(255, 255, 255, 0.9); margin-bottom: 2rem; font-size: 1.1rem;">
+                        Discover amazing products, exclusive deals, and a premium shopping experience.
+                    </p>
+                    <ul style="list-style: none; text-align: left; padding: 0;">
+                        <li
+                            style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; color: white;">
+                            <span style="font-size: 1.5rem;">✓</span>
+                            <span>Free shipping on all orders</span>
+                        </li>
+                        <li
+                            style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; color: white;">
+                            <span style="font-size: 1.5rem;">✓</span>
+                            <span>Exclusive member discounts</span>
+                        </li>
+                        <li
+                            style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; color: white;">
+                            <span style="font-size: 1.5rem;">✓</span>
+                            <span>Track your orders easily</span>
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 0.75rem; color: white;">
+                            <span style="font-size: 1.5rem;">✓</span>
+                            <span>24/7 customer support</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ShopHub</h3>
+                    <p>Your premium destination for quality products and exceptional service.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#products">Products</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        <li><a href="login.html">Account</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Customer Service</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <ul>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 ShopHub. All rights reserved. Built with ❤️</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle password visibility
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        // Switch to register form
+        function switchToRegister(e) {
+            e.preventDefault();
+            document.getElementById('loginCard').style.display = 'none';
+            document.getElementById('registerCard').style.display = 'block';
+            document.getElementById('infoPanel').style.order = '-1';
+        }
+
+        // Switch to login form
+        function switchToLogin(e) {
+            e.preventDefault();
+            document.getElementById('loginCard').style.display = 'block';
+            document.getElementById('registerCard').style.display = 'none';
+            document.getElementById('infoPanel').style.order = '0';
+        }
+
+        // Handle login
+        async function handleLogin(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const btnText = document.getElementById('loginBtnText');
+            const btnLoading = document.getElementById('loginBtnLoading');
+            const loginBtn = document.getElementById('loginBtn');
+
+            // Show loading
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-block';
+            loginBtn.disabled = true;
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showToast('Login successful! 🎉', 'success');
+                    localStorage.setItem('user', JSON.stringify(data.user));
+
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else {
+                    showToast(data.message || 'Login failed', 'error');
+                    btnText.style.display = 'inline';
+                    btnLoading.style.display = 'none';
+                    loginBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showToast('Unable to connect to server. Please try again.', 'error');
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+                loginBtn.disabled = false;
+            }
+        }
+
+        // Handle register
+        async function handleRegister(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('registerUsername').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            const btnText = document.getElementById('registerBtnText');
+            const btnLoading = document.getElementById('registerBtnLoading');
+            const registerBtn = document.getElementById('registerBtn');
+
+            // Validate passwords match
+            if (password !== confirmPassword) {
+                showToast('Passwords do not match', 'error');
+                return;
+            }
+
+            // Show loading
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-block';
+            registerBtn.disabled = true;
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showToast('Account created successfully! 🎉', 'success');
+
+                    setTimeout(() => {
+                        // Auto-login after registration
+                        document.getElementById('loginEmail').value = email;
+                        document.getElementById('loginPassword').value = password;
+                        switchToLogin(new Event('click'));
+                    }, 1500);
+                } else {
+                    showToast(data.message || 'Registration failed', 'error');
+                    btnText.style.display = 'inline';
+                    btnLoading.style.display = 'none';
+                    registerBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showToast('Unable to connect to server. Please try again.', 'error');
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+                registerBtn.disabled = false;
+            }
+        }
+    </script>
+
+    <style>
+        @media (max-width: 968px) {
+            .container>div {
+                grid-template-columns: 1fr !important;
+            }
+
+            #infoPanel {
+                order: -1 !important;
+                padding: 2rem 1.5rem !important;
+            }
+        }
+    </style>
+</body>
+
+</html>
