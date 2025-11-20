@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🛍️ ShopHub - Premium E-Commerce Platform
 
 A modern, full-stack e-commerce application built with vanilla JavaScript, HTML, CSS, and Node.js. Features a premium glassmorphism UI, dynamic user authentication, and a comprehensive admin dashboard.
@@ -111,3 +112,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 📄 License
 
 This project is licensed under the MIT License.
+=======
+# ShopHub
+>>>>>>> 5d7c359a2e5360b67ccaeafd13f7d68b316bda31
